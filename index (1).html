@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pour Kenza 🎁</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #fafafa;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      color: #1a1a1a;
+    }
+
+    #app {
+      width: 100%;
+      max-width: 520px;
+      padding: 2.5rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 1.4rem;
+    }
+
+    .page { display: none; flex-direction: column; align-items: center; gap: 1.3rem; width: 100%; }
+    .page.active { display: flex; }
+
+    .big-icon { font-size: 48px; }
+    .title { font-size: 21px; font-weight: 600; color: #1a1a1a; }
+    .sub { font-size: 14px; color: #666; line-height: 1.6; }
+
+    .next-btn {
+      padding: 11px 28px;
+      background: #fff;
+      border: 1.5px solid #ddd;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #1a1a1a;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .next-btn:hover { background: #f5f5f5; }
+
+    .progress-row { display: flex; gap: 8px; align-items: center; }
+    .step-dot {
+      width: 11px; height: 11px; border-radius: 50%;
+      background: #e5e7eb; border: 1.5px solid #ddd;
+      transition: background 0.3s;
+    }
+    .step-dot.done { background: #1a1a1a; border-color: #1a1a1a; }
+    .step-dot.current { background: #888; border-color: #888; }
+
+    /* JEU 1 */
+    #game1-zone {
+      position: relative; width: 100%; height: 210px;
+      border: 1.5px dashed #ddd; border-radius: 16px;
+      overflow: hidden; background: #f9f9f9;
+    }
+    #flying-msg {
+      position: absolute; left: 50%; top: 50%;
+      transform: translate(-50%, -50%);
+      padding: 9px 18px;
+      background: #fff; border: 1.5px solid #ddd; border-radius: 12px;
+      font-size: 14px; font-weight: 500;
+      cursor: pointer; white-space: nowrap;
+      user-select: none;
+      transition: left 0.12s ease, top 0.12s ease;
+    }
+    #g1-count { font-size: 13px; color: #999; }
+
+    /* JEU 2 */
+    #calc-display {
+      font-size: 34px; font-weight: 700; color: #1a1a1a;
+      padding: 1rem 2rem; background: #f3f4f6;
+      border-radius: 14px; width: 100%;
+    }
+    .calc-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; }
+    .calc-btn {
+      padding: 13px;
+      background: #fff; border: 1.5px solid #ddd; border-radius: 12px;
+      font-size: 18px; font-weight: 600; color: #1a1a1a; cursor: pointer;
+      transition: background 0.1s;
+    }
+    .calc-btn:hover { background: #f5f5f5; }
+    .calc-btn.wrong { border-color: #f87171; color: #dc2626; animation: shake 0.3s; }
+    .calc-btn.correct-show { border-color: #34d399; color: #059669; }
+    #calc-msg { font-size: 13px; color: #dc2626; min-height: 20px; }
+    #calc-progress { font-size: 13px; color: #999; }
+    @keyframes shake {
+      0%,100% { transform: translateX(0); }
+      25% { transform: translateX(-6px); }
+      75% { transform: translateX(6px); }
+    }
+
+    /* JEU 3 */
+    .cg-question { font-size: 17px; font-weight: 600; color: #1a1a1a; line-height: 1.5; }
+    .cg-options { display: flex; flex-direction: column; gap: 9px; width: 100%; }
+    .cg-btn {
+      padding: 12px 16px; background: #fff;
+      border: 1.5px solid #ddd; border-radius: 12px;
+      font-size: 14px; color: #1a1a1a; cursor: pointer;
+      text-align: left; transition: background 0.1s;
+    }
+    .cg-btn:hover { background: #f5f5f5; }
+    .cg-btn.wrong { border-color: #f87171; color: #dc2626; }
+    .cg-btn.correct-wrong { border-color: #34d399; color: #059669; }
+    #cg-msg { font-size: 13px; color: #666; min-height: 18px; line-height: 1.5; }
+    .cg-text-row { display: flex; gap: 8px; width: 100%; }
+    .cg-text-input {
+      flex: 1; padding: 11px 14px; font-size: 14px;
+      border: 1.5px solid #ddd; border-radius: 12px;
+      outline: none; background: #fff; color: #1a1a1a;
+      transition: border-color 0.2s;
+    }
+    .cg-text-input:focus { border-color: #a78bfa; }
+    .cg-text-input.wrong { border-color: #f87171; }
+    .cg-text-input.correct { border-color: #34d399; }
+    .cg-submit-btn {
+      padding: 11px 18px; background: #fff;
+      border: 1.5px solid #ddd; border-radius: 12px;
+      font-size: 14px; font-weight: 500; color: #1a1a1a;
+      cursor: pointer; white-space: nowrap;
+      transition: background 0.1s;
+    }
+    .cg-submit-btn:hover { background: #f5f5f5; }
+
+    /* JEU 4 */
+    #game4-zone {
+      position: relative; width: 100%; height: 220px;
+      border: 1.5px dashed #ddd; border-radius: 16px;
+      overflow: hidden; background: #f9f9f9;
+    }
+    #reward-btn {
+      position: absolute; left: 50%; top: 50%;
+      transform: translate(-50%, -50%);
+      padding: 13px 28px;
+      background: #fff; border: 1.5px solid #ddd; border-radius: 12px;
+      font-size: 15px; font-weight: 500; cursor: pointer;
+      white-space: nowrap;
+      transition: left 0.12s ease, top 0.12s ease;
+    }
+    #g4-count { font-size: 13px; color: #999; }
+
+    /* FINALE */
+    .finale-emojis { font-size: 46px; line-height: 1.4; }
+
+    /* ===== THÈME ROSE ===== */
+    :root {
+      --pink-1: #fff0f6;
+      --pink-2: #ffd6e7;
+      --pink-3: #ff8fc2;
+      --pink-4: #ff5ca8;
+      --pink-5: #e64980;
+      --text: #4a2140;
+    }
+
+    body {
+      background: radial-gradient(circle at top, #ffe4ef 0%, #fff0f6 40%, #fff7fa 100%);
+      color: var(--text);
+    }
+
+    #app {
+      background: rgba(255,255,255,.7);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,92,168,.15);
+      border-radius: 28px;
+      box-shadow:
+        0 20px 40px rgba(230,73,128,.12),
+        0 8px 20px rgba(230,73,128,.08);
+    }
+
+    .title { color: var(--pink-5); }
+    .sub { color: #8b5f78; }
+
+    .next-btn, .calc-btn, .cg-btn, .cg-submit-btn, #reward-btn, #flying-msg {
+      background: linear-gradient(135deg, #ffffff, #fff4f8);
+      border: 2px solid #ffc4dd;
+      color: var(--pink-5);
+      font-weight: 600;
+      box-shadow: 0 6px 16px rgba(255,92,168,.12);
+    }
+
+    .next-btn:hover, .calc-btn:hover, .cg-btn:hover, .cg-submit-btn:hover {
+      transform: translateY(-2px);
+      border-color: var(--pink-4);
+      box-shadow: 0 10px 24px rgba(255,92,168,.18);
+    }
+
+    #game1-zone, #game4-zone {
+      background: linear-gradient(135deg, #fff8fb, #ffeef6);
+      border: 2px dashed #ffb3d1;
+    }
+
+    #calc-display {
+      background: linear-gradient(135deg, #ffe7f2, #ffd8ea);
+      color: var(--pink-5);
+      border: 2px solid #ffc4dd;
+    }
+
+    .step-dot { background: #ffd4e6; border-color: #ffb7d5; }
+    .step-dot.current {
+      background: var(--pink-4);
+      border-color: var(--pink-4);
+      box-shadow: 0 0 15px rgba(255,92,168,.5);
+    }
+    .step-dot.done { background: var(--pink-5); border-color: var(--pink-5); }
+
+    .cg-text-input { border: 2px solid #ffc4dd; }
+    .cg-text-input:focus {
+      border-color: var(--pink-4);
+      box-shadow: 0 0 0 4px rgba(255,92,168,.15);
+    }
+
+    .finale-emojis { animation: bounce 1.2s infinite; }
+    .big-icon { animation: floaty 3s ease-in-out infinite; }
+
+    @keyframes floaty {
+      0%,100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    @keyframes bounce {
+      0%,100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+  </style>
+</head>
+<body>
+<div id="app">
+
+  <!-- INTRO -->
+  <div class="page active" id="page-0">
+    <div class="big-icon">🎁</div>
+    <div class="title">Une surprise t'attend</div>
+    <div class="sub">Tu clc si tu finis ça t'as gagné direct ton pyjama.<br>C'est pas si difficile... ou pas.</div>
+    <div class="progress-row">
+      <div class="step-dot current" id="dot-1"></div>
+      <div class="step-dot" id="dot-2"></div>
+      <div class="step-dot" id="dot-3"></div>
+      <div class="step-dot" id="dot-4"></div>
+    </div>
+    <button class="next-btn" onclick="goTo(1)">Commencer →</button>
+  </div>
+
+  <!-- JEU 1 -->
+  <div class="page" id="page-1">
+    <div class="title">Épreuve 1 — Attrape le message</div>
+    <div class="sub">Clique dessus 3 fois pour continuer (tkt c'est pas long)</div>
+    <div id="game1-zone">
+      <div id="flying-msg" onclick="catchMessage()">✉️ Clique ici !</div>
+    </div>
+    <div id="g1-count">Tentatives : 0</div>
+  </div>
+
+  <!-- JEU 2 -->
+  <div class="page" id="page-2">
+    <div class="title">Épreuve 2 — Calcul mental</div>
+    <div class="sub">Trouve le bon résultat. Ay si tu fausse</div>
+    <div id="calc-display">?</div>
+    <div class="calc-options" id="calc-opts"></div>
+    <div id="calc-msg"></div>
+    <div id="calc-progress">0 / 3 bons</div>
+  </div>
+
+  <!-- JEU 3 -->
+  <div class="page" id="page-3">
+    <div class="title">Épreuve 3 — Culture générale</div>
+    <div id="cg-question-num" class="sub">Question 1 / 11</div>
+    <div class="cg-question" id="cg-q"></div>
+    <div class="cg-options" id="cg-opts"></div>
+    <div id="cg-msg"></div>
+  </div>
+
+  <!-- JEU 4 -->
+  <div class="page" id="page-4">
+    <div class="title">Épreuve 4 — Ton pyjama t'attend 😏</div>
+    <div class="sub" id="g4-message">Clique sur le bouton pour récupérer ton pyjama</div>
+    <div id="game4-zone">
+      <button id="reward-btn">Clique pour ton pyjama</button>
+    </div>
+    <div id="g4-count">Tentatives : 0</div>
+  </div>
+
+</div>
+
+<script>
+  function goTo(n) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page-' + n).classList.add('active');
+    updateDots(n);
+    if (n === 1) startGame1();
+    if (n === 2) startGame2();
+    if (n === 3) startGame3();
+    if (n === 4) startGame4();
+  }
+
+  function updateDots(n) {
+    for (let i = 1; i <= 4; i++) {
+      const d = document.getElementById('dot-' + i);
+      if (!d) return;
+      d.className = 'step-dot' + (i < n ? ' done' : i === n ? ' current' : '');
+    }
+  }
+
+  /* ---- JEU 1 : message volant ---- */
+  let g1Interval, catchCount = 0, g1Tries = 0;
+
+  function startGame1() {
+    catchCount = 0; g1Tries = 0;
+    document.getElementById('g1-count').textContent = 'Tentatives : 0';
+    clearInterval(g1Interval);
+    const msg = document.getElementById('flying-msg');
+    const zone = document.getElementById('game1-zone');
+    g1Interval = setInterval(() => {
+      const mw = msg.offsetWidth || 130, mh = msg.offsetHeight || 38;
+      const zw = zone.offsetWidth - mw - 10, zh = zone.offsetHeight - mh - 10;
+      msg.style.left = (10 + Math.random() * zw) + 'px';
+      msg.style.top = (10 + Math.random() * zh) + 'px';
+      msg.style.transform = 'none';
+    }, 650);
+  }
+
+  function catchMessage() {
+    g1Tries++;
+    document.getElementById('g1-count').textContent = 'Tentatives : ' + g1Tries;
+    catchCount++;
+    if (catchCount >= 3) {
+      clearInterval(g1Interval);
+      setTimeout(() => goTo(2), 300);
+    } else {
+      const msg = document.getElementById('flying-msg');
+      const zone = document.getElementById('game1-zone');
+      const mw = msg.offsetWidth || 130, mh = msg.offsetHeight || 38;
+      const zw = zone.offsetWidth - mw - 10, zh = zone.offsetHeight - mh - 10;
+      msg.style.left = (10 + Math.random() * zw) + 'px';
+      msg.style.top = (10 + Math.random() * zh) + 'px';
+    }
+  }
+
+  /* ---- JEU 2 : calcul truqué ---- */
+  const calcQuestions = [
+    { q: '17 × 6',   correct: 102, fakeCorrect: 98,  wrongs: [112, 89] },
+    { q: '144 ÷ 12', correct: 12,  fakeCorrect: 11,  wrongs: [14, 13]  },
+    { q: '23 + 58',  correct: 81,  fakeCorrect: 79,  wrongs: [91, 83]  },
+    { q: '9²',       correct: 81,  fakeCorrect: 83,  wrongs: [72, 79]  },
+    { q: '√196',     correct: 14,  fakeCorrect: 13,  wrongs: [16, 12]  },
+  ];
+  let calcIdx = 0, calcGood = 0;
+
+  function startGame2() { calcIdx = 0; calcGood = 0; showCalc(); }
+
+  function showCalc() {
+    if (calcGood >= 3) { goTo(3); return; }
+    if (calcIdx >= calcQuestions.length) calcIdx = 0;
+    const q = calcQuestions[calcIdx];
+    document.getElementById('calc-display').textContent = q.q + ' = ?';
+    document.getElementById('calc-msg').textContent = '';
+    document.getElementById('calc-progress').textContent = calcGood + ' / 3 bons';
+    const opts = [q.fakeCorrect, ...q.wrongs].sort(() => Math.random() - 0.5);
+    const div = document.getElementById('calc-opts');
+    div.innerHTML = '';
+    opts.forEach(v => {
+      const b = document.createElement('button');
+      b.className = 'calc-btn'; b.textContent = v;
+      b.onclick = () => pickCalc(v, q, b);
+      div.appendChild(b);
+    });
+  }
+
+  function pickCalc(v, q, btn) {
+    document.querySelectorAll('.calc-btn').forEach(b => b.onclick = null);
+    if (v === q.fakeCorrect) {
+      btn.classList.add('correct-show');
+      document.getElementById('calc-msg').textContent = "Bien joué ! (en fait c'est " + q.correct + " mais on s'en fout)";
+      calcGood++; calcIdx++;
+      document.getElementById('calc-progress').textContent = calcGood + ' / 3 bons';
+      setTimeout(showCalc, 1000);
+    } else {
+      btn.classList.add('wrong');
+      document.getElementById('calc-msg').textContent = 'Faux ! Réessaie...';
+      setTimeout(() => {
+        btn.classList.remove('wrong');
+        document.querySelectorAll('.calc-btn').forEach(b => {
+          const val = parseInt(b.textContent);
+          b.onclick = () => pickCalc(val, q, b);
+        });
+      }, 600);
+    }
+  }
+
+  /* ---- JEU 3 : culture G ---- */
+  const cgQuestions = [
+    {
+      q: "Quelle est la capitale de l'Azerbaïdjan ?",
+      opts: ['Bakou', 'Tbilissi', 'Erevan', 'Achgabat'],
+      correct: 'Bakou',
+      msg: "FAUX ! C'est Bakou... faut regarder F1 chérie"
+    },
+    {
+      q: "Quelle est la capitale du Kazakhstan ?",
+      opts: ['Almaty', 'Astana', 'Chymkent', 'Bichkek'],
+      correct: 'Astana',
+      msg: "Mauvaise réponse ! (c'est Astana, anciennement Nur-Sultan, mais on s'en fout tu as tort)"
+    },
+    {
+      q: "Quelle est la capitale du Bhoutan ?",
+      opts: ['Katmandou', 'Thimphou', 'Paro', 'Punakha'],
+      correct: 'Thimphou',
+      msg: "Nope ! C'est Thimphou. logique en plus bhoutan thimphouu"
+    },
+    {
+      q: "Quelle est la capitale du Suriname ?",
+      opts: ['Georgetown', 'Cayenne', 'Paramaribo', 'Bridgetown'],
+      correct: 'Paramaribo',
+      msg: "Raté ! C'est Paramaribo. Facile pourtant dehhhhhh"
+    },
+    {
+      q: "Quelle est la capitale de l'Érythrée ?",
+      opts: ['Addis-Abeba', 'Djibouti', 'Asmara', 'Mogadiscio'],
+      correct: 'Asmara',
+      msg: "Faux ! C'est Asmara. T'aurais dû t'en douter orgh"
+    },
+    {
+      q: "Quelle est la capitale du Kirghizistan ?",
+      opts: ['Tachkent', 'Douchanbé', 'Bichkek', 'Achgabat'],
+      correct: 'Bichkek',
+      msg: "Non non ! C'est Bichkek. Prochaine fois recherche"
+    },
+    {
+      q: "Quelle est la capitale des Îles Féroé ?",
+      opts: ['Reykjavik', 'Tórshavn', 'Nuuk', 'Bergen'],
+      correct: 'Tórshavn',
+      msg: "Faux encore ! C'est Tórshavn. Bon courage bisouuu"
+    },
+    {
+      q: "Quelle est la capitale du Vanuatu ?",
+      opts: ['Suva', 'Apia', 'Port-Vila', 'Nouméa'],
+      correct: 'Port-Vila',
+      msg: "Mauvaise réponse ! C'est Port-Vila. T'es sûre d'avoir révisé ? 😂"
+    },
+    {
+      q: "Quelle est la capitale du Turkménistan ?",
+      opts: ['Achgabat', 'Tachkent', 'Bichkek', 'Almaty'],
+      correct: 'Achgabat',
+      msg: "C'est Achgabat ! leuy tu savais pas"
+    },
+    {
+      q: "Quelle est la capitale de la Papouasie-Nouvelle-Guinée ?",
+      opts: ['Darwin', 'Port Moresby', 'Honiara', 'Suva'],
+      correct: 'Port Moresby',
+      msg: "Raté ! Mais t'es nulle en géographie deh arrête de dormir"
+    },
+    {
+      q: "C'est quoi la capitale de ton cœur ?",
+      opts: [],
+      correct: 'regis evrard mambi gomis',
+      type: 'text',
+      wrongMsg: "Mauvaise réponse... réfléchis bien",
+      msg: "Pas mal ! ✅"
+    },
+  ];
+  let cgIdx = 0;
+
+  function startGame3() { cgIdx = 0; showCG(); }
+
+  function showCG() {
+    if (cgIdx >= cgQuestions.length) { goTo(4); return; }
+    const q = cgQuestions[cgIdx];
+    document.getElementById('cg-q').textContent = q.q;
+    document.getElementById('cg-question-num').textContent = 'Question ' + (cgIdx + 1) + ' / ' + cgQuestions.length;
+    document.getElementById('cg-msg').textContent = '';
+    const div = document.getElementById('cg-opts');
+    div.innerHTML = '';
+
+    if (q.type === 'text') {
+      const row = document.createElement('div');
+      row.className = 'cg-text-row';
+      const input = document.createElement('input');
+      input.className = 'cg-text-input';
+      input.type = 'text';
+      input.placeholder = 'Ta réponse...';
+      input.autocomplete = 'off';
+      const btn = document.createElement('button');
+      btn.className = 'cg-submit-btn';
+      btn.textContent = 'Valider →';
+      const submit = () => {
+        const val = input.value.trim().toLowerCase();
+        if (val === q.correct) {
+          input.classList.add('correct');
+          input.classList.remove('wrong');
+          btn.onclick = null;
+          input.onkeydown = null;
+          document.getElementById('cg-msg').textContent = q.msg;
+          cgIdx++;
+          setTimeout(showCG, 1800);
+        } else {
+          input.classList.add('wrong');
+          document.getElementById('cg-msg').textContent = q.wrongMsg;
+          setTimeout(() => input.classList.remove('wrong'), 700);
+        }
+      };
+      btn.onclick = submit;
+      input.onkeydown = e => { if (e.key === 'Enter') submit(); };
+      row.appendChild(input);
+      row.appendChild(btn);
+      div.appendChild(row);
+    } else {
+      [...q.opts].sort(() => Math.random() - 0.5).forEach(o => {
+        const b = document.createElement('button');
+        b.className = 'cg-btn'; b.textContent = o;
+        b.onclick = () => pickCG(o, q, b);
+        div.appendChild(b);
+      });
+    }
+  }
+
+  function pickCG(v, q, btn) {
+    document.querySelectorAll('.cg-btn').forEach(b => b.onclick = null);
+    if (v === q.correct) {
+      btn.classList.add('correct-wrong');
+      document.getElementById('cg-msg').textContent = 'Pas mal ! ✅';
+      cgIdx++;
+      setTimeout(showCG, 1200);
+    } else {
+      btn.classList.add('wrong');
+      document.getElementById('cg-msg').textContent = q.msg;
+      setTimeout(() => {
+        btn.classList.remove('wrong');
+        document.querySelectorAll('.cg-btn').forEach(b => {
+          const txt = b.textContent;
+          b.onclick = () => pickCG(txt, q, b);
+        });
+      }, 1400);
+    }
+  }
+
+  /* ---- JEU 4 : bouton impossible ---- */
+  let g4Tries = 0;
+  let g4Interval = null;
+
+  const trollMessages = [
+    "Khana tu veux pas ton pyjama ? 😭",
+    "Presque... enfin non 😂",
+    "T'es trop lente 🤡",
+    "Allez encore un effort 😏",
+    "Le pyjama est juste là... ou pas",
+    "Tu l'auras jamais 😭",
+    "J'y croyais presque 😂",
+    "Encore raté 😌",
+    "Tu t'acharnes quand même 🤣",
+    "Le pyjama te fuit",
+    "Ça devient gênant là 😭",
+    "Toujours pas ? 🤡",
+    "Je commence à avoir mal pour toi 😂",
+    "Abandonne pendant qu'il est temps",
+    "Mdr tu continues vraiment ?"
+  ];
+
+  function startGame4() {
+    g4Tries = 0;
+    const btn = document.getElementById('reward-btn');
+    const zone = document.getElementById('game4-zone');
+    document.getElementById('g4-count').textContent = 'Tentatives : 0';
+    document.getElementById('g4-message').textContent = 'Clique sur le bouton pour récupérer ton pyjama';
+    clearInterval(g4Interval);
+    g4Interval = setInterval(() => {
+      const bw = btn.offsetWidth;
+      const bh = btn.offsetHeight;
+      const maxX = zone.clientWidth - bw - 10;
+      const maxY = zone.clientHeight - bh - 10;
+      btn.style.left = Math.random() * maxX + 'px';
+      btn.style.top = Math.random() * maxY + 'px';
+      btn.style.transform = 'none';
+    }, 180);
+    document.addEventListener('click', updateTrollMessage);
+  }
+
+  function updateTrollMessage() {
+    const page4 = document.getElementById('page-4');
+    if (!page4.classList.contains('active')) return;
+    g4Tries++;
+    document.getElementById('g4-count').textContent = 'Tentatives : ' + g4Tries;
+    const msg = trollMessages[Math.floor(Math.random() * trollMessages.length)];
+    document.getElementById('g4-message').textContent = msg;
+    if (g4Tries === 30) {
+      document.getElementById('g4-message').textContent = "Khana tu veux pas de pyjama ?";
+    }
+    if (g4Tries === 60) {
+      document.getElementById('g4-message').textContent = "Toujours là ? Gueum sa bopp seundeyy";
+    }
+    if (g4Tries === 100) {
+      document.getElementById('g4-message').textContent = "Bon...maintien rek";
+    }
+  }
+</script>
+</body>
+</html>
