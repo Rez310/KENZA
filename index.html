@@ -150,6 +150,125 @@
 
     /* FINALE */
     .finale-emojis { font-size: 46px; line-height: 1.4; }
+    /* ===== THÈME ROSE ===== */
+
+:root{
+  --pink-1:#fff0f6;
+  --pink-2:#ffd6e7;
+  --pink-3:#ff8fc2;
+  --pink-4:#ff5ca8;
+  --pink-5:#e64980;
+  --text:#4a2140;
+}
+
+body{
+  background:
+    radial-gradient(circle at top, #ffe4ef 0%, #fff0f6 40%, #fff7fa 100%);
+  color: var(--text);
+}
+
+#app{
+  background: rgba(255,255,255,.7);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,92,168,.15);
+  border-radius: 28px;
+  box-shadow:
+    0 20px 40px rgba(230,73,128,.12),
+    0 8px 20px rgba(230,73,128,.08);
+}
+
+.title{
+  color: var(--pink-5);
+}
+
+.sub{
+  color:#8b5f78;
+}
+
+.next-btn,
+.calc-btn,
+.cg-btn,
+.cg-submit-btn,
+#reward-btn,
+#flying-msg{
+  background: linear-gradient(135deg,#ffffff,#fff4f8);
+  border: 2px solid #ffc4dd;
+  color: var(--pink-5);
+  font-weight: 600;
+  box-shadow: 0 6px 16px rgba(255,92,168,.12);
+}
+
+.next-btn:hover,
+.calc-btn:hover,
+.cg-btn:hover,
+.cg-submit-btn:hover{
+  transform: translateY(-2px);
+  border-color: var(--pink-4);
+  box-shadow: 0 10px 24px rgba(255,92,168,.18);
+}
+
+#game1-zone,
+#game4-zone{
+  background: linear-gradient(
+    135deg,
+    #fff8fb,
+    #ffeef6
+  );
+  border: 2px dashed #ffb3d1;
+}
+
+#calc-display{
+  background: linear-gradient(
+    135deg,
+    #ffe7f2,
+    #ffd8ea
+  );
+  color: var(--pink-5);
+  border: 2px solid #ffc4dd;
+}
+
+.step-dot{
+  background:#ffd4e6;
+  border-color:#ffb7d5;
+}
+
+.step-dot.current{
+  background:var(--pink-4);
+  border-color:var(--pink-4);
+  box-shadow:0 0 15px rgba(255,92,168,.5);
+}
+
+.step-dot.done{
+  background:var(--pink-5);
+  border-color:var(--pink-5);
+}
+
+.cg-text-input{
+  border:2px solid #ffc4dd;
+}
+
+.cg-text-input:focus{
+  border-color:var(--pink-4);
+  box-shadow:0 0 0 4px rgba(255,92,168,.15);
+}
+
+.finale-emojis{
+  animation: bounce 1.2s infinite;
+}
+
+.big-icon{
+  animation: floaty 3s ease-in-out infinite;
+}
+
+@keyframes floaty{
+  0%,100%{transform:translateY(0);}
+  50%{transform:translateY(-8px);}
+}
+
+@keyframes bounce{
+  0%,100%{transform:translateY(0);}
+  50%{transform:translateY(-6px);}
+}
   </style>
 </head>
 <body>
@@ -159,7 +278,7 @@
   <div class="page active" id="page-0">
     <div class="big-icon">🎁</div>
     <div class="title">Une surprise t'attend</div>
-    <div class="sub">Complète les 4 épreuves pour récupérer ta récompense.<br>C'est pas si difficile... ou pas.</div>
+    <div class="sub">Tu clc si tu finis ça t'as gagné direct ton pyjama.<br>C'est pas si difficile... ou pas.</div>
     <div class="progress-row">
       <div class="step-dot current" id="dot-1"></div>
       <div class="step-dot" id="dot-2"></div>
@@ -172,7 +291,7 @@
   <!-- JEU 1 -->
   <div class="page" id="page-1">
     <div class="title">Épreuve 1 — Attrape le message</div>
-    <div class="sub">Clique dessus 3 fois pour continuer</div>
+    <div class="sub">Clique dessus 3 fois pour continuer(tkt c'est pas long)</div>
     <div id="game1-zone">
       <div id="flying-msg" onclick="catchMessage()">✉️ Clique ici !</div>
     </div>
@@ -182,7 +301,7 @@
   <!-- JEU 2 -->
   <div class="page" id="page-2">
     <div class="title">Épreuve 2 — Calcul mental</div>
-    <div class="sub">Trouve le bon résultat</div>
+    <div class="sub">Trouve le bon résultat. Ay si tu fausse</div>
     <div id="calc-display">?</div>
     <div class="calc-options" id="calc-opts"></div>
     <div id="calc-msg"></div>
@@ -198,26 +317,19 @@
     <div id="cg-msg"></div>
   </div>
 
-  <!-- JEU 4 -->
-  <div class="page" id="page-4">
-    <div class="title">Épreuve 4 — Ta récompense t'attend</div>
-    <div class="sub">Clique sur le bouton pour la récupérer</div>
-    <div id="game4-zone">
-      <button id="reward-btn" onmouseover="fleeBtn()" ontouchstart="fleeBtn()">🎁 Clique pour ta récompense</button>
-    </div>
-    <div id="g4-count">Tentatives : 0</div>
+<div class="page" id="page-4">
+  <div class="title">Épreuve 4 — Ton pyjama t'attend 😏</div>
+  <div class="sub" id="g4-message">
+    Clique sur le bouton pour récupérer ton pyjama
   </div>
 
-  <!-- FINALE -->
-  <div class="page" id="page-5">
-    <div class="finale-emojis">😂🤣😂🤣😂</div>
-    <div class="title" style="font-size:23px">GG t'as tout complété 🤡</div>
-    <div style="font-size:38px; margin: 0.3rem 0">💀💀💀</div>
-    <div class="sub">Ta récompense c'est... rien du tout.<br>Absolument rien. T'as cru ? 😭</div>
-    <div style="font-size:40px; margin-top:0.5rem">🤡🤡🤡</div>
-    <div style="font-size:13px; color:#999; margin-top:0.5rem">Mambi est mort de rire là 😂</div>
+  <div id="game4-zone">
+    <button id="reward-btn">
+      Clique pour ton pyjama
+    </button>
   </div>
 
+  <div id="g4-count">Tentatives : 0</div>
 </div>
 
 <script>
@@ -331,43 +443,43 @@
       q: "Quelle est la capitale de l'Azerbaïdjan ?",
       opts: ['Bakou', 'Tbilissi', 'Erevan', 'Achgabat'],
       correct: 'Bakou',
-      msg: "FAUX ! C'est Bakou... attends non c'est pas ça... si en fait ? Peu importe 😂"
+      msg: "FAUX ! C'est Bakou...faut regarder F1 chérie"
     },
     {
       q: "Quelle est la capitale du Kazakhstan ?",
       opts: ['Almaty', 'Astana', 'Chymkent', 'Bichkek'],
       correct: 'Astana',
-      msg: "Mauvaise réponse ! (c'est Astana, anciennement Nur-Sultan, mais on s'en fout tu as tort 🤷)"
+      msg: "Mauvaise réponse ! (c'est Astana, anciennement Nur-Sultan, mais on s'en fout tu as tort )"
     },
     {
       q: "Quelle est la capitale du Bhoutan ?",
       opts: ['Katmandou', 'Thimphou', 'Paro', 'Punakha'],
       correct: 'Thimphou',
-      msg: "Nope ! C'est Thimphou. T'aurais dû réviser 😌"
+      msg: "Nope ! C'est Thimphou. logique en plus bhoutan thimphouu"
     },
     {
       q: "Quelle est la capitale du Suriname ?",
       opts: ['Georgetown', 'Cayenne', 'Paramaribo', 'Bridgetown'],
       correct: 'Paramaribo',
-      msg: "Raté ! C'est Paramaribo. Facile pourtant 😂"
+      msg: "Raté ! C'est Paramaribo. Facile pourtant dehhhhhh"
     },
     {
       q: "Quelle est la capitale de l'Érythrée ?",
       opts: ['Addis-Abeba', 'Djibouti', 'Asmara', 'Mogadiscio'],
       correct: 'Asmara',
-      msg: "Faux ! C'est Asmara. T'aurais dû t'en douter 😏"
+      msg: "Faux ! C'est Asmara. T'aurais dû t'en douter orgh"
     },
     {
       q: "Quelle est la capitale du Kirghizistan ?",
       opts: ['Tachkent', 'Douchanbé', 'Bichkek', 'Achgabat'],
       correct: 'Bichkek',
-      msg: "Non non ! C'est Bichkek. Prochaine fois révise 😬"
+      msg: "Non non ! C'est Bichkek. Prochaine fois recherchel"
     },
     {
       q: "Quelle est la capitale des Îles Féroé ?",
       opts: ['Reykjavik', 'Tórshavn', 'Nuuk', 'Bergen'],
       correct: 'Tórshavn',
-      msg: "Faux encore ! C'est Tórshavn. Bon courage 😭"
+      msg: "Faux encore ! C'est Tórshavn. Bon courage bisouuu"
     },
     {
       q: "Quelle est la capitale du Vanuatu ?",
@@ -379,21 +491,21 @@
       q: "Quelle est la capitale du Turkménistan ?",
       opts: ['Achgabat', 'Tachkent', 'Bichkek', 'Almaty'],
       correct: 'Achgabat',
-      msg: "C'est Achgabat ! La ville toute blanche. T'aurais dû t'en souvenir 🤡"
+      msg: "C'est Achgabat ! leuy tu savais pas"
     },
     {
       q: "Quelle est la capitale de la Papouasie-Nouvelle-Guinée ?",
       opts: ['Darwin', 'Port Moresby', 'Honiara', 'Suva'],
       correct: 'Port Moresby',
-      msg: "Raté ! C'est Port Moresby. Bonne chance pour la suite 😌"
+      msg: "Raté ! Mais t'es nulle en géographie deh arrête de dormir"
     },
     {
-      q: "C'est quoi la capitale de ton cœur ? 💕",
+      q: "C'est quoi la capitale de ton cœur ?",
       opts: [],
-      correct: 'kenza',
+      correct: 'Regis Evrard Mambi Gomis',
       type: 'text',
-      wrongMsg: "Mauvaise réponse... réfléchis bien 🤔",
-      msg: "Bien sûr que c'est toi... NON c'est une blague 😂🤡 Passe à la suite !"
+      wrongMsg: "Mauvaise réponse... réfléchis bien ",
+      msg: "Bien sûr que c'est moi... Passe à la suite !"
     },
   ];
   let cgIdx = 0;
@@ -471,25 +583,92 @@
     }
   }
 
-  /* ---- JEU 4 : bouton infini ---- */
-  let g4Tries = 0, g4Cooldown = false;
+  /* ---- JEU 4 : bouton impossible ---- */
 
-  function startGame4() { g4Tries = 0; document.getElementById('g4-count').textContent = 'Tentatives : 0'; }
+let g4Tries = 0;
+let g4Interval = null;
 
-  function fleeBtn() {
-    if (g4Cooldown) return;
-    g4Cooldown = true;
-    g4Tries++;
-    document.getElementById('g4-count').textContent = 'Tentatives : ' + g4Tries;
-    const btn = document.getElementById('reward-btn');
-    const zone = document.getElementById('game4-zone');
-    const bw = btn.offsetWidth || 190, bh = btn.offsetHeight || 44;
-    const zw = zone.offsetWidth - bw - 10, zh = zone.offsetHeight - bh - 10;
-    btn.style.left = (10 + Math.random() * zw) + 'px';
-    btn.style.top = (10 + Math.random() * zh) + 'px';
+const trollMessages = [
+  "Khana tu veux pas ton pyjama ? 😭",
+  "Presque... enfin non 😂",
+  "T'es trop lente 🤡",
+  "Allez encore un effort 😏",
+  "Le pyjama est juste là... ou pas",
+  "Tu l'auras jamais 😭",
+  "J'y croyais presque 😂",
+  "Encore raté 😌",
+  "Tu t'acharnes quand même 🤣",
+  "Le pyjama te fuit",
+  "Ça devient gênant là 😭",
+  "Toujours pas ? 🤡",
+  "Je commence à avoir mal pour toi 😂",
+  "Abandonne pendant qu'il est temps",
+  "Mdr tu continues vraiment ?"
+];
+
+function startGame4() {
+
+  g4Tries = 0;
+
+  const btn = document.getElementById('reward-btn');
+  const zone = document.getElementById('game4-zone');
+
+  document.getElementById('g4-count').textContent =
+    'Tentatives : 0';
+
+  document.getElementById('g4-message').textContent =
+    'Clique sur le bouton pour récupérer ton pyjama';
+
+  clearInterval(g4Interval);
+
+  g4Interval = setInterval(() => {
+
+    const bw = btn.offsetWidth;
+    const bh = btn.offsetHeight;
+
+    const maxX = zone.clientWidth - bw - 10;
+    const maxY = zone.clientHeight - bh - 10;
+
+    btn.style.left = Math.random() * maxX + 'px';
+    btn.style.top = Math.random() * maxY + 'px';
     btn.style.transform = 'none';
-    setTimeout(() => { g4Cooldown = false; }, 160);
+
+  }, 180);
+
+  document.addEventListener('click', updateTrollMessage);
+}
+
+function updateTrollMessage() {
+
+  const page4 = document.getElementById('page-4');
+
+  if (!page4.classList.contains('active')) return;
+
+  g4Tries++;
+
+  document.getElementById('g4-count').textContent =
+    'Tentatives : ' + g4Tries;
+
+  const msg =
+    trollMessages[Math.floor(Math.random() * trollMessages.length)];
+
+  document.getElementById('g4-message').textContent = msg;
+
+  if (g4Tries === 30) {
+    document.getElementById('g4-message').textContent =
+      "Khana tu veux pas de pyjama ?";
   }
+
+  if (g4Tries === 60) {
+    document.getElementById('g4-message').textContent =
+      "Toujours là ? Gueum sa bopp seundeyy";
+  }
+
+  if (g4Tries === 100) {
+    document.getElementById('g4-message').textContent =
+      "Bon...maintien rek";
+  }
+}
 </script>
 </body>
 </html>
